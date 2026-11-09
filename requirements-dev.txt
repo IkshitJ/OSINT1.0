@@ -1,0 +1,2 @@
+# Only for testing. The dashboard itself needs nothing beyond Python 3.9+.
+playwright==1.60.0

@@ -1,0 +1,263 @@
+/* Ujjain Crowd Monitor: dark operations-room layout.
+   Map on the left, the two field apps in the middle, the overcrowding log on the right. */
+
+:root {
+  --bg: #0b0c0d;
+  --panel: #121416;
+  --panel-raised: #181b1e;
+  --line: #24282c;
+  --text: #d7dbde;
+  --text-dim: #7d858c;
+  --accent: #3ddc84;
+  --ok: #3ddc84;
+  --near: #f5a524;
+  --over: #ef4444;
+  --over-bg: rgba(239, 68, 68, 0.08);
+  --font: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --topbar-height: 44px;
+  --gap: 6px;
+  /* The embedded apps are full desktop pages; show them a little smaller so more fits. */
+  --embed-scale: 0.75;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 12px/1.45 var(--font);
+}
+
+button { font: inherit; color: inherit; }
+
+/* --- Top bar -------------------------------------------------------------- */
+
+.topbar {
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.brand-name { font-weight: 700; letter-spacing: 0.12em; }
+.brand-city { color: var(--text-dim); }
+
+.topbar-status { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.source-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.source-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
+.source-pill.online { color: var(--text); }
+.source-pill.online i { background: var(--ok); }
+.source-pill.offline i { background: var(--over); }
+
+.clock { margin-left: auto; color: var(--text-dim); white-space: nowrap; }
+
+/* --- Panel grid ------------------------------------------------------------ */
+
+.layout {
+  height: calc(100vh - var(--topbar-height));
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 340px;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "map sensor alerts"
+    "map cctv   alerts";
+  gap: var(--gap);
+  padding: var(--gap);
+}
+
+.panel-map    { grid-area: map; }
+.panel-sensor { grid-area: sensor; }
+.panel-cctv   { grid-area: cctv; }
+.panel-alerts { grid-area: alerts; }
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+.panel-header h2 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.panel-link { margin-left: auto; color: var(--text-dim); text-decoration: none; }
+.panel-link:hover { color: var(--text); }
+
+/* --- Map ------------------------------------------------------------------- */
+
+.map { flex: 1; min-height: 0; }
+
+.map-controls { margin-left: auto; display: flex; gap: 6px; }
+.map-controls button {
+  padding: 3px 8px;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.map-controls button.on { border-color: var(--accent); color: var(--accent); }
+.map-controls button.unavailable { opacity: 0.55; text-decoration: line-through; }
+
+.map { position: relative; }
+.map-notice {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: min(520px, calc(100% - 80px));
+  padding: 8px 12px;
+  background: rgba(18, 20, 22, 0.95);
+  border: 1px solid var(--near);
+  border-radius: 4px;
+  color: var(--text);
+}
+.map-notice[hidden] { display: none; }
+
+.map-legend {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 12px;
+  padding: 5px 10px;
+  background: rgba(18, 20, 22, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--text-dim);
+}
+
+.dot { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; vertical-align: middle; }
+.dot-ok   { background: var(--ok); }
+.dot-near { background: var(--near); }
+.dot-over { background: var(--over); }
+
+/* Ram Ghat (and future site) markers */
+.site-marker { display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+.site-marker-dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0b0c0d;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+.site-marker[data-level="ok"]   .site-marker-dot { background: var(--ok); }
+.site-marker[data-level="near"] .site-marker-dot { background: var(--near); }
+.site-marker[data-level="over"] .site-marker-dot { background: var(--over); animation: pulse 1.2s infinite; }
+.site-marker-label {
+  padding: 2px 6px;
+  background: rgba(18, 20, 22, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  100% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+}
+
+.maplibregl-ctrl-attrib { font-size: 10px; }
+
+/* --- Embedded apps ----------------------------------------------------------- */
+
+.embedded-app {
+  border: 0;
+  background: #000;
+  width: calc(100% / var(--embed-scale));
+  height: calc((100% - 34px) / var(--embed-scale));
+  transform: scale(var(--embed-scale));
+  transform-origin: top left;
+  position: absolute;
+  top: 34px;
+  left: 0;
+}
+
+/* --- Overcrowding log -------------------------------------------------------- */
+
+.active-count { margin-left: auto; color: var(--text-dim); }
+.active-count.has-active { color: var(--over); font-weight: 700; }
+
+.alert-filters { display: flex; gap: 4px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.alert-filters button {
+  padding: 2px 8px;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-dim);
+}
+.alert-filters button.on { background: var(--panel-raised); color: var(--text); border-color: var(--text-dim); }
+
+.alert-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
+
+.alert {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid transparent;
+}
+.alert.raised { border-left-color: var(--over); background: var(--over-bg); }
+.alert.cleared { border-left-color: var(--ok); }
+
+.alert-head { display: flex; gap: 8px; align-items: baseline; }
+.alert-state { font-weight: 700; font-size: 10px; letter-spacing: 0.08em; }
+.alert.raised .alert-state { color: var(--over); }
+.alert.cleared .alert-state { color: var(--ok); }
+.alert-place { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.alert-count { margin-left: auto; white-space: nowrap; }
+.alert-message { margin: 4px 0; color: var(--text); }
+.alert-meta { color: var(--text-dim); font-size: 11px; }
+
+.alert-empty { padding: 16px 10px; margin: 0; color: var(--text-dim); }
+.alert-empty[hidden] { display: none; }
+
+/* --- Smaller screens: stack the panels ---------------------------------------- */
+
+@media (max-width: 1100px) {
+  .layout {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    grid-template-areas: "map" "alerts" "sensor" "cctv";
+  }
+  .panel-map { height: 60vh; }
+  .panel-alerts { height: 50vh; }
+  .panel-sensor, .panel-cctv { height: 70vh; }
+  .topbar { gap: 12px; }
+  .topbar-status { display: none; }
+}

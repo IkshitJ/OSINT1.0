@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ujjain Crowd Monitor</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">CROWD MONITOR</span>
+      <span class="brand-city">Ujjain</span>
+    </div>
+    <div class="topbar-status">
+      <span class="source-pill" data-source="sensor"><i></i>Sensor gates</span>
+      <span class="source-pill" data-source="headcounter"><i></i>CCTV</span>
+      <span class="source-pill" data-source="dashboard"><i></i>Live log</span>
+    </div>
+    <time class="clock" id="clock"></time>
+  </header>
+
+  <main class="layout">
+    <section class="panel panel-map">
+      <header class="panel-header">
+        <h2>Ujjain situation</h2>
+        <div class="map-controls" id="map-controls"></div>
+      </header>
+      <div class="map" id="map"></div>
+      <aside class="map-legend">
+        <span><i class="dot dot-ok"></i>Under limit</span>
+        <span><i class="dot dot-near"></i>Over 80 %</span>
+        <span><i class="dot dot-over"></i>Overcrowded</span>
+      </aside>
+    </section>
+
+    <section class="panel panel-sensor">
+      <header class="panel-header">
+        <h2>Sensor gates · Ram Ghat</h2>
+        <a class="panel-link" id="sensor-open" target="_blank" rel="noopener">Open ↗</a>
+      </header>
+      <iframe class="embedded-app" id="sensor-frame" title="Sensor gates app"></iframe>
+    </section>
+
+    <section class="panel panel-cctv">
+      <header class="panel-header">
+        <h2>CCTV head count</h2>
+        <a class="panel-link" id="headcounter-open" target="_blank" rel="noopener">Open ↗</a>
+      </header>
+      <iframe class="embedded-app" id="headcounter-frame" title="Headcounter CCTV app" allow="autoplay"></iframe>
+    </section>
+
+    <section class="panel panel-alerts">
+      <header class="panel-header">
+        <h2>Overcrowding log</h2>
+        <span class="active-count" id="active-count">0 active</span>
+      </header>
+      <div class="alert-filters" id="alert-filters">
+        <button type="button" data-filter="all" class="on">All</button>
+        <button type="button" data-filter="sensor">Sensor</button>
+        <button type="button" data-filter="headcounter">CCTV</button>
+      </div>
+      <ol class="alert-list" id="alert-list"></ol>
+      <p class="alert-empty" id="alert-empty">No overcrowding warnings yet.</p>
+    </section>
+  </main>
+</body>
+</html>
