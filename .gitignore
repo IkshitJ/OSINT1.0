@@ -1,4 +1,13 @@
 .env
 .venv/
 __pycache__/
+.DS_Store
 dashboard.png
+
+# Built or downloaded on first run (./run.sh)
+sensor/simulation/bin/
+models/*.pt
+
+# Camera footage is yours to add (see footage/README.md); only the note is kept in git
+footage/*
+!footage/README.md

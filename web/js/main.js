@@ -2,9 +2,11 @@
 // routes live events to them.
 
 import { createAlertLog } from "./alert-log.js";
+import { createCctvPanel } from "./cctv-panel.js";
 import { createCrowdMap } from "./crowd-map.js";
 import { setSourcePill, startClock } from "./header.js";
 import { connectLiveEvents } from "./live-events.js";
+import { createSensorPanel } from "./sensor-panel.js";
 
 const byId = (id) => document.getElementById(id);
 
@@ -12,16 +14,37 @@ async function main() {
   startClock(byId("clock"));
 
   const config = await fetch("/api/config").then((response) => response.json());
+  byId("cctv-open").href = config.cctvAppUrl;
 
-  embedApp("sensor", config.sensorAppUrl);
-  embedApp("headcounter", config.headcounterAppUrl);
-
+  // Picking a ghat on the map and picking its tab are the same thing.
+  let sensorPanel;
   const map = createCrowdMap({
     container: byId("map"),
     controlsContainer: byId("map-controls"),
     mapConfig: config.map,
-    sites: config.sites,
+    ghats: config.ghats,
+    onSelectGhat: (ghatId) => sensorPanel.select(ghatId),
   });
+
+  sensorPanel = createSensorPanel({
+    tabsEl: byId("ghat-tabs"),
+    frameEl: byId("sensor-frame"),
+    openEl: byId("sensor-open"),
+    appUrl: config.sensorAppUrl,
+    ghats: config.ghats,
+    els: {
+      stats: byId("gate-stats"),
+      inside: byId("gate-inside"),
+      limit: byId("gate-limit"),
+      fill: byId("gate-fill"),
+      entered: byId("gate-in"),
+      exited: byId("gate-out"),
+      state: byId("gate-state"),
+    },
+    onSelect: (ghatId) => map.highlightGhat(ghatId),
+  });
+
+  const cctvPanel = createCctvPanel({ gridEl: byId("camera-grid"), totalEl: byId("cctv-total"), ghats: config.ghats });
 
   const alertLog = createAlertLog({
     listEl: byId("alert-list"),
@@ -33,10 +56,13 @@ async function main() {
   function showSourceStatus(status) {
     setSourcePill(status.source, status.online, status.error ?? "");
     if (status.source === "sensor") {
-      const reading = status.online && status.reading?.mode === "counting"
-        ? { count: status.reading.inside, limit: status.reading.limit, alarm: status.reading.alarm }
-        : null;
-      for (const siteId of map.sitesFor("sensor")) map.setSiteReading(siteId, reading);
+      const sites = status.online ? status.reading?.sites : null;
+      sensorPanel.setReadings(sites);
+      map.setGateReadings(sites);
+    } else if (status.source === "headcounter") {
+      const cameras = status.online ? status.reading?.cameras : null;
+      cctvPanel.setReadings(cameras);
+      map.setCameraReadings(cameras);
     }
   }
 
@@ -49,11 +75,6 @@ async function main() {
     onSource: showSourceStatus,
     onConnectionChange: (online) => setSourcePill("dashboard", online),
   });
-}
-
-function embedApp(name, url) {
-  byId(`${name}-frame`).src = url;
-  byId(`${name}-open`).href = url;
 }
 
 main().catch((error) => {

@@ -31,27 +31,41 @@
         <div class="map-controls" id="map-controls"></div>
       </header>
       <div class="map" id="map"></div>
-      <aside class="map-legend">
+      <aside class="map-legend maplibregl-ctrl">
         <span><i class="dot dot-ok"></i>Under limit</span>
         <span><i class="dot dot-near"></i>Over 80 %</span>
         <span><i class="dot dot-over"></i>Overcrowded</span>
+        <span class="legend-traffic">Traffic
+          <i class="road road-free"></i>Free
+          <i class="road road-slow"></i>Slow
+          <i class="road road-jam"></i>Jam
+          <i class="dot dot-sim"></i>Simulated (Sim cars)</span>
       </aside>
     </section>
 
     <section class="panel panel-sensor">
       <header class="panel-header">
-        <h2>Sensor gates · Ram Ghat</h2>
+        <h2>Sensor gates</h2>
+        <div class="ghat-tabs" id="ghat-tabs" role="tablist" aria-label="Which ghat's gates to show"></div>
         <a class="panel-link" id="sensor-open" target="_blank" rel="noopener">Open ↗</a>
       </header>
-      <iframe class="embedded-app" id="sensor-frame" title="Sensor gates app"></iframe>
+      <div class="gate-stats" id="gate-stats">
+        <span class="gate-inside"><b id="gate-inside">–</b> inside <span id="gate-limit"></span></span>
+        <span class="gate-bar" title="People inside against the overcrowding limit"><i id="gate-fill"></i></span>
+        <span class="gate-flow">in <b id="gate-in">–</b></span>
+        <span class="gate-flow">out <b id="gate-out">–</b></span>
+        <span class="gate-state" id="gate-state"></span>
+      </div>
+      <iframe class="embedded-app" id="sensor-frame" title="Sensor gates simulation"></iframe>
     </section>
 
     <section class="panel panel-cctv">
       <header class="panel-header">
         <h2>CCTV head count</h2>
-        <a class="panel-link" id="headcounter-open" target="_blank" rel="noopener">Open ↗</a>
+        <span class="panel-note" id="cctv-total"></span>
+        <a class="panel-link" id="cctv-open" target="_blank" rel="noopener">Open ↗</a>
       </header>
-      <iframe class="embedded-app" id="headcounter-frame" title="Headcounter CCTV app" allow="autoplay"></iframe>
+      <div class="camera-area"><div class="camera-grid" id="camera-grid"></div></div>
     </section>
 
     <section class="panel panel-alerts">

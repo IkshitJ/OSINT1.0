@@ -1,8 +1,8 @@
 """
-Whether each upstream app is reachable, plus its latest headline numbers.
+Whether each data source is working, plus its latest headline numbers.
 
 The dashboard header shows one status pill per source, and the map shows the
-latest Sensor reading on the Ram Ghat marker; both come from here.
+latest readings on the ghat markers; both come from here.
 """
 
 from __future__ import annotations

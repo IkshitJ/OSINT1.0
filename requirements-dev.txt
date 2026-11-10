@@ -1,2 +1,2 @@
-# Only for testing. The dashboard itself needs nothing beyond Python 3.9+.
+# Only for the browser check (tests/browser_check.py).
 playwright==1.60.0

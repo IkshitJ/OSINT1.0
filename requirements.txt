@@ -1,0 +1,19 @@
+# Everything the crowd monitor needs (one server: dashboard + sensor simulator + CCTV head counting).
+# ./run.sh installs these into .venv.
+
+# Web server
+fastapi>=0.100.0
+uvicorn>=0.23.0
+websockets>=12.0              # live CCTV pictures to the browser
+python-multipart>=0.0.6       # video uploads to a camera
+
+# CCTV head counting
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.0.0
+opencv-python-headless>=4.8.0
+
+# Optional crowd analysis (POST /cctv/api/analyze): Claude + GTFS-Realtime
+anthropic>=2.4.0
+requests>=2.30.0
+gtfs-realtime-bindings>=1.0.0
